@@ -1,0 +1,15 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Home
+{% endblock %}
+
+{% block main %}
+    <form action="/match" method="post">
+        <div>
+            <br/><br/>
+            <h3>Click Below To Match With Other Users</h3>
+            <br/>
+            <button class="btn btn-success btn-lg" type="submit">Match!</button>
+    </form>
+{% endblock %}

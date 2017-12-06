@@ -1,0 +1,11 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Log In
+{% endblock %}
+
+{% block main %}
+    <form action="/spotifylogin" method="post">
+       <button class="btn btn-success btn-lg" type="submit">Connect with Spotify Account</button>
+    </form>
+{% endblock %}

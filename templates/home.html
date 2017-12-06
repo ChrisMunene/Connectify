@@ -1,0 +1,38 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Home
+{% endblock %}
+
+{% block main %}
+    <form action="/match" method="post">
+        <div>
+            <h1>Hello {{user['username']}} :)</h1>
+            <br/><br/>
+            <h3>Match with other users based on your most recently played tracks</h3>
+            <br/>
+            <button class="btn btn-success btn-lg" type="submit">Get Matched!</button>
+        </div>
+        <br/>
+    </form>
+    <h3>Below is a list of your most recently played tracks</h3>
+    </br>
+    <form action="/spotifylogin" method="post">
+        <button class="btn btn-success btn-lg" type="submit">Refresh List</button>
+        </br>
+        <table>
+            <tr>
+                <th>Name</th>
+                <th>Artist</th>
+            </tr>
+            <br>
+            {% for x in rows %}
+            <tr>
+                <td>{{x['name']}}</td>
+                <td>{{x['artist']}}</td>
+            </tr>
+            {% endfor %}
+       </table>
+       </br>
+    </form>
+{% endblock %}

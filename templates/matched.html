@@ -1,0 +1,41 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Home
+{% endblock %}
+
+{% block main %}
+    <form action="/match" method="post">
+        <div>
+            <br/><br/>
+            <h3>These are the users with whom you have matched</h3>
+            <br/>
+            <button class="btn btn-success" type="submit">Re-Match!</button>
+        </div>
+        {% if Bool %}
+        <form action = "/email" method="post">
+        <div>
+            <table>
+            <tr>
+                <th>Username</th>
+                <th>% Match</th>
+                <th>Email</th>
+            </tr>
+            <br/>
+            {% for x in matches %}
+            <tr>
+                <td>{{x[0]}}</td>
+                <td>{{x[1]}}</td>
+                <td></td>
+            </tr>
+            {% endfor %}
+            </table>
+        </div>
+        </form>
+        {% else %}
+            <br/>
+            <h3>Sorry! You have no Matches!</h3>
+        {% endif %}
+        <br/>
+    </form>
+{% endblock %}
