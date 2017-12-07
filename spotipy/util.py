@@ -10,7 +10,7 @@ import spotipy
 scope = 'user-library-read user-read-recently-played'
 client_id='a87374f58bfd4fd0b620603295750581'
 client_secret='b1f668733dc74665bffdd4073a74c6d7'
-redirect_uri='http://ide50-eomondi.cs50.io:8080/spotifylogin'
+redirect_uri='https://connectifyme.herokuapp.com/spotifylogin'
 
 
 def redirect_user():
