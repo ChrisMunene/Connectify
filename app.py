@@ -133,7 +133,6 @@ def match():
         return render_template("match.html")
 
 
-
 @app.route("/login", methods=["GET", "POST"])
 def login():
     """Log user in"""
@@ -216,6 +215,6 @@ def errorhandler(e):
     return apology(e.name, e.code)
 
 
-# # listen for errors
-# for code in default_exceptions:
-#     app.errorhandler(code)(errorhandler)
+# listen for errors
+for code in default_exceptions:
+    app.errorhandler(code)(errorhandler)
