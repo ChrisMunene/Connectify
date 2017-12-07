@@ -98,8 +98,8 @@ def match():
         # variable to store True or False for Matches
         match_success = False
         # count how many users are there
-        select = db.execute("SELECT COUNT(*) FROM users")
-        count = int(select[0]['COUNT(*)'])
+        select = db.execute("SELECT COUNT(username) FROM users")
+        count = int(select[0]['COUNT(username)'])
         print(f"Count is {count}")
         # get list of current users recently played tracks
         current = db.execute("SELECT DISTINCT name, artist FROM songs WHERE userid = :id ORDER BY songid DESC LIMIT 50", id=session["user_id"])
