@@ -197,10 +197,11 @@ def register():
         hpassword = generate_password_hash(request.form.get("password"))
         # get the highest userid in the users column
         result_users = db.execute("SELECT max(userid) FROM users")
+        max = int(result_users[0]['max']) + 1
         print(f"Results are {result_users}")
         # Store username and password in the database
-        result = db.execute("INSERT INTO users (username, hash, email) VALUES (:username, :hash, :email)",
-                            username=request.form.get("username"), hash=hpassword, email=request.form.get("email"))
+        result = db.execute("INSERT INTO users (userid, username, hash, email) VALUES (:userid, :username, :hash, :email)",
+                            userid=max, username=request.form.get("username"), hash=hpassword, email=request.form.get("email"))
         # Check that username does not already exist
         if not result:
             return apology("Sorry! Username already exists!", 400)
