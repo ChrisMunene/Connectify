@@ -99,6 +99,7 @@ def match():
         match_success = False
         # count how many users are there
         select = db.execute("SELECT COUNT(username) FROM users")
+        print(f"Select is {select}")
         count = int(select[0]['COUNT(username)'])
         print(f"Count is {count}")
         # get list of current users recently played tracks
