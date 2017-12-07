@@ -195,6 +195,9 @@ def register():
             return apology("Passwords Don't Match!", 400)
         # Hash the password to secure it
         hpassword = generate_password_hash(request.form.get("password"))
+        # get the highest userid in the users column
+        result_users = db.execute("SELECT max(userid) FROM users")
+        print(f"Results are {result_users}")
         # Store username and password in the database
         result = db.execute("INSERT INTO users (username, hash, email) VALUES (:username, :hash, :email)",
                             username=request.form.get("username"), hash=hpassword, email=request.form.get("email"))
