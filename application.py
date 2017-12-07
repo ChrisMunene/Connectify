@@ -30,7 +30,7 @@ app.config["SESSION_TYPE"] = "filesystem"
 Session(app)
 
 # Configure CS50 Library to use SQLite database
-db = SQL("sqlite:///connectify.db")
+db = SQL("postgres://wdlklxifcvahpo:0ee892364c6603d8db41cab721ea59d8c631b7fe8dd40398dde9fa3bca792721@ec2-54-235-123-153.compute-1.amazonaws.com:5432/dbnl1nukk7qkqt")
 
 
 @app.route("/spotifylogin", methods=["GET", "POST"])
