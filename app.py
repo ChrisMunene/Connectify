@@ -8,6 +8,7 @@ from werkzeug.security import check_password_hash, generate_password_hash
 import spotipy
 import spotipy.util as util
 import operator
+import psycopg2
 
 from helpers import apology, login_required
 
