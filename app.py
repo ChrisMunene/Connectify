@@ -79,7 +79,7 @@ def home():
     # Get current user's username
     user = db.execute("SELECT username FROM users WHERE userid = :id", id=session["user_id"])
     # delete any duplicates in the table
-    rows = db.execute("DELETE FROM songs WHERE userid = :id AND rowid NOT IN (SELECT min(rowid) FROM songs WHERE userid = :id GROUP BY name, artist)", id=session["user_id"])
+    rows = db.execute("DELETE FROM songs WHERE userid = :id AND songid NOT IN (SELECT min(songid) FROM songs WHERE userid = :id GROUP BY name, artist)", id=session["user_id"])
     # get tracks from database without duplicates
     rows = db.execute("SELECT DISTINCT name, artist FROM songs WHERE userid = :id ORDER BY songid DESC LIMIT 50", id=session["user_id"])
 
