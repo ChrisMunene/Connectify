@@ -3,5 +3,3 @@ Flask
 Flask-Session
 requests==2.3.0
 six==1.10.0
-gunicorn
-psycopg2

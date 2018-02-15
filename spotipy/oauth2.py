@@ -160,7 +160,7 @@ class SpotifyOAuth(object):
     def is_token_expired(self, token_info):
         return is_token_expired(token_info)
 
-    def get_authorize_url(self, state=None, show_dialog=False):
+    def get_authorize_url(self, state=None, show_dialog=True):
         """ Gets the URL to use to authorize this app
         """
         payload = {'client_id': self.client_id,

@@ -10,7 +10,7 @@ import spotipy
 scope = 'user-library-read user-read-recently-played'
 client_id='a87374f58bfd4fd0b620603295750581'
 client_secret='b1f668733dc74665bffdd4073a74c6d7'
-redirect_uri='https://connectifyme.herokuapp.com/spotifylogin'
+redirect_uri='http://ide50-eomondi.cs50.io:8080/spotifylogin'
 
 
 def redirect_user():
@@ -37,6 +37,7 @@ def get_token(response=None):
         scope=scope)
     code = sp_oauth.parse_response_code(response)
     token_info = sp_oauth.get_access_token(code)
+    code =  None
     # Auth'ed API request
     if token_info:
         return token_info['access_token']

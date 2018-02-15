@@ -30,7 +30,7 @@ app.config["SESSION_TYPE"] = "filesystem"
 Session(app)
 
 # Configure CS50 Library to use SQLite database
-db = SQL("postgres://wdlklxifcvahpo:0ee892364c6603d8db41cab721ea59d8c631b7fe8dd40398dde9fa3bca792721@ec2-54-235-123-153.compute-1.amazonaws.com:5432/dbnl1nukk7qkqt")
+db = SQL("sqlite:///connectify.db")
 
 
 @app.route("/spotifylogin", methods=["GET", "POST"])
@@ -47,14 +47,14 @@ def spotify():
         token = util.get_token(response=response)
         if token:
             sp = spotipy.Spotify(auth=token)
-            # Get user's 50 most recently played tracks as a JSON object
+            # Get user's 50 most recently played tracks as a list of dictionaries
             results = sp.current_user_recently_played(limit=50)
-            # Iterate through JSON object to get track name and artist and store in connectify database
+            # Iterate through results to get track name and artist and store in connectify database
             for item in results['items']:
                 track = item['track']
                 result = db.execute("INSERT INTO songs (name, artist, userid) VALUES (:name, :artist, :id)",
                                     name=track['name'], artist=track['artists'][0]['name'], id=session["user_id"])
-                print (track['name'] + ' - ' + track['artists'][0]['name'])
+            # token = None
         else:
             return apology("Can't connect to Spotify", 405)
 
@@ -98,9 +98,8 @@ def match():
         # variable to store True or False for Matches
         match_success = False
         # count how many users are there
-        select = db.execute("SELECT COUNT(*) FROM users")
-        count = int(select[0]['COUNT(*)'])
-        print(f"Count is {count}")
+        select = db.execute("SELECT COUNT(username) FROM users")
+        count = int(select[0]['COUNT(username)'])
         # get list of current users recently played tracks
         current = db.execute("SELECT DISTINCT name, artist FROM songs WHERE userid = :id ORDER BY songid DESC LIMIT 50", id=session["user_id"])
         # create a list of song names and artists for current user as strings
@@ -111,7 +110,8 @@ def match():
         # iterate through each other user
         for i in range(count):
             if i != session["user_id"]:
-                # Get username of user being matched
+                o_set = set()
+                # Get username and email of user being matched
                 user = db.execute("SELECT username FROM users WHERE userid = :id", id=i)
                 # get list of other users recently played tracks
                 rows = db.execute("SELECT DISTINCT name, artist FROM songs WHERE userid = :id ORDER BY songid DESC LIMIT 50", id=i)
@@ -119,18 +119,41 @@ def match():
                 for x in rows:
                     o_string = ""
                     o_string += str(x['name'] + " by " + x['artist'])
+                    # print(f"o_string is {o_string}")
                     o_set.add(o_string)
                 # get % match based on similar songs
                 value = round(((len(c_set.intersection(o_set)))/len(c_set)) * 100, 2)
                 # add match to matched dictionary if match is not 0
                 if value > 0:
                     match_success = True
+                    # add username and match for currently matched user to the matched dictionary
                     matched.update({str(user[0]['username']): value})
+        # sorts the matched users in descending order based on their % match
         sorted_matches = sorted(matched.items(), key=operator.itemgetter(1), reverse=True)
+        emails = list()
+        m_len = len(sorted_matches)
+        for x in range(m_len):
+            result = db.execute("SELECT email FROM users WHERE username = :name", name=sorted_matches[x][0])
+            emails.append(result)
+        # display  matched users
         return render_template("matched.html", matches=sorted_matches, Bool=match_success)
     else:
         return render_template("match.html")
 
+
+@app.route("/email", methods=["GET", "POST"])
+@login_required
+def email():
+    """Allow user to send email to matched users by providing their username"""
+    # User reached route via POST (as by submitting a form via POST)
+    if request.method == "POST":
+        if not request.form.get("username"):
+            return apology("must provide username", 403)
+        result = db.execute("SELECT email FROM users WHERE username = :name", name=request.form.get("username"))
+        link = "mailto:" + result[0]['email'] + "?Subject=Hi%20I%20connected%20with%20you%20on%20Connectify!"
+        return render_template("emailed.html", link=link, name=request.form.get("username"))
+    else:
+        return render_template("email.html")
 
 
 @app.route("/login", methods=["GET", "POST"])
@@ -153,10 +176,9 @@ def login():
 
         # Query database for username
         rows = db.execute("SELECT * FROM users WHERE username = :username",
-                          username=request.form.get("username"))
-
+                          username=request.form.get("username"))#
         # Ensure username exists and password is correct
-        if len(rows) != 1:
+        if len(rows) != 1 or not check_password_hash(rows[0]["hash"], request.form.get("password")):
             return apology("invalid username", 405)
         elif not check_password_hash(rows[0]["hash"], request.form.get("password")):
             return apology("invalid password", 405)
@@ -175,7 +197,6 @@ def login():
 @app.route("/logout")
 def logout():
     """Log user out"""
-
     # Forget any user_id
     session.clear()
 

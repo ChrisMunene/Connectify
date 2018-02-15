@@ -1,3 +1,20 @@
+# Connectify - Application that allows users to match based on Spotify music
+
+## Description
+
+Connectify is a python application that deploys a website using Flask and where users can match with other users on the website based on their Spotify data.
+
+## Installation
+
+Connectify uses the Spotipy python library (see below) and thus requires installing the library which can be found here (https://github.com/plamere/spotipy)
+
+## Quick Start
+
+To get started, simply run flask on your terminal while in the main directory where connectify is stored and then go to the link provided.
+
+
+
+
 # Spotipy - a Python client for The Spotify Web API
 
 ## Description
